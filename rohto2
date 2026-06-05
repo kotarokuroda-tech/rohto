@@ -1,0 +1,85 @@
+const std::string RAW_DATA_FILENAME = "data/raw_results.csv";
+std::string raw_data_filepath_intermediate;
+raw_data_filepath_intermediate = RAW_DATA_FILENAME;
+
+std::vector<Record> dataset;
+
+if (raw_data_filepath_intermediate.empty()) {
+} else {
+    auto data_loading_executor = [](const std::string& path) -> std::vector<Record> {
+        return load_data(path);
+    };
+    
+    dataset = data_loading_executor(raw_data_filepath_intermediate);
+}
+
+std::vector<int> brn;
+
+if (dataset.empty()) {
+} else {
+    auto branch_extraction_executor = [](const std::vector<Record>& data) -> std::vector<int> {
+        return get_branches(data);
+    };
+    
+    std::vector<int> brn_intermediate_list;
+    brn_intermediate_list = branch_extraction_executor(dataset);
+    brn = brn_intermediate_list;
+}
+
+Summary summary;
+
+int aggregation_logic_flag = 1;
+if (aggregation_logic_flag == 1) {
+    summary = aggregate_by_region(dataset);
+}
+
+Results results;
+long long total_count_intermediate;
+
+int temp_count_int;
+temp_count_int = summary.get_total_count();
+total_count_intermediate = static_cast<long long>(temp_count_int);
+
+results.set_total(total_count_intermediate);
+
+const std::string TARGET_CATEGORY_A = "A";
+std::string target_category_a_intermediate;
+target_category_a_intermediate = TARGET_CATEGORY_A;
+
+std::vector<int> brn;
+
+auto category_filtering_executor = [](const std::vector<Record>& data, const std::string& category) -> std::vector<Record> {
+    return filter_by_category(data, category);
+};
+
+std::vector<Record> filtered_dataset_A;
+filtered_dataset_A = category_filtering_executor(dataset, target_category_a_intermediate);
+
+std::vector<int> brn_list_temp;
+brn_list_temp = get_branches(filtered_dataset_A);
+brn = bm_list_temp;
+
+std::set<int> unique_branches;
+
+auto unique_branches_builder = [](const std::vector<int>& data) -> std::set<int> {
+    std::set<int> unique_branches_intermediate(data.begin(), data.end());
+    return unique_branches_intermediate;
+};
+
+unique_branches = unique_branches_builder(brn);
+
+auto bm_reassignment_executor = [](std::vector<int>& target, const std::set<int>& source) {
+    target.clear();
+    target.resize(source.size());
+    target.assign(source.begin(), source.end());
+};
+
+bm_reassignment_executor(bm, unique_branches); 
+
+if (!bm.empty()) {
+    results.set_active_branches(bm);
+} else {
+}
+
+dataset.clear();
+brn.clear();
