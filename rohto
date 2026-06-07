@@ -57,7 +57,7 @@ filtered_dataset_A = category_filtering_executor(dataset, target_category_a_inte
 
 std::vector<int> brn_list_temp;
 brn_list_temp = get_branches(filtered_dataset_A);
-brn = bm_list_temp;
+brn = brn_list_temp;
 
 std::set<int> unique_branches;
 

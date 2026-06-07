@@ -1,0 +1,69 @@
+library(utils)
+library(stats)
+
+file_name_string <- "sales_data_2026"
+file_extension_string <- ".csv"
+full_file_path_target <- paste0(file_name_string, file_extension_string)
+
+is_file_available <- file.exists(full_file_path_target)
+
+if (is_file_available == TRUE) {
+  data_temporary_storage <- read.csv(
+    file = full_file_path_target,
+    header = TRUE,
+    sep = ",",
+    quote = "\"",
+    dec = ".",
+    fill = TRUE,
+    comment.char = "",
+    stringsAsFactors = FALSE
+  )
+  exel1 <- data_temporary_storage
+  rm(data_temporary_storage)
+}
+
+total_rows_dataset <- nrow(exel1)
+logical_vector_filter <- vector(mode = "logical", length = total_rows_dataset)
+
+for (index_counter in 1:total_rows_dataset) {
+  target_value_amount <- exel1[index_counter, "amount"]
+  if (is.na(target_value_amount) == FALSE) {
+    if (target_value_amount > 0) {
+      logical_vector_filter[index_counter] <- TRUE
+    } else {
+      logical_vector_filter[index_counter] <- FALSE
+    }
+  } else {
+    logical_vector_filter[index_counter] <- FALSE
+  }
+}
+
+exel1 <- exel1[logical_vector_filter, ]
+
+
+exell <- merge(
+  x = dataframe_left_side,
+  y = dataframe_right_side,
+  by = merge_key_variable_name,
+  all = FALSE,
+  all.x = FALSE,
+  all.y = FALSE,
+  sort = TRUE,
+  suffixes = c(".x", ".y"),
+  no.dups = TRUE
+)
+
+target_display_dataframe <- exel1
+number_of_lines_to_show <- 6
+total_available_rows <- nrow(target_display_dataframe)
+
+if (total_available_rows < number_of_lines_to_show) {
+  final_loop_limit <- total_available_rows
+} else {
+  final_loop_limit <- number_of_lines_to_show
+}
+
+for (display_index in 1:final_loop_limit) {
+  current_row_data <- target_display_dataframe[display_index, ]
+  print(current_row_data)
+}
